@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaunchBoard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.27.0/plotly.min.js"></script>
+    <style>/* ============================================= */
+/*           LaunchBoard	                 */
+/* ============================================= */
+
+/* === STARFIELD — UNKILLABLE === */
+.stars {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+}
+.star {
+    position: absolute !important;
+    background: #fff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 8px #0ff, 0 0 16px #0ff !important;
+    animation: float 10s linear infinite !important;
+    opacity: 0;
+}
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
+}
+
+
+/* === BODY & FONT === */
+body {
+    background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e) !important;
+    font-family: 'Orbitron', sans-serif;
+    color: #eee !important;
+    overflow-x: hidden;
+}
+
+/* === GLASSMORPHISM CARDS === */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    transition: all 0.3s ease;
+    padding: 20px;
+}
+
+.glass-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 255, 0.4);
+}
+
+/* === TEXT COLORS === */
+.text-info { 
+    color: #0ff !important; 
+    font-weight: bold; 
+}
+.text-light { 
+    color: #fff !important; 
+}
+
+/* === NEON SLIDER === */
+.rc-slider-track {
+    background: linear-gradient(90deg, #0ff, #f0f) !important;
+    height: 6px !important;
+    border-radius: 3px;
+}
+
+.rc-slider-handle {
+    border: 2px solid #0ff !important;
+    box-shadow: 0 0 12px #0ff !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin-top: -7px !important;
+}
+
+.rc-slider-rail { 
+    background: #333 !important; 
+    height: 6px !important;
+}
+
+/* === DROPDOWN: FORCE OPEN UPWARD + NO CLIPPING === */
+.Select-control {
+    background: #333 !important;
+    border: 1px solid #0ff !important;
+    color: #0ff !important;
+    border-radius: 8px !important;
+    height: 38px !important;
+}
+
+.Select-placeholder,
+.Select--single > .Select-control .Select-value {
+    color: #0ff !important;
+    line-height: 38px !important;
+}
+
+/* OPEN UPWARD */
+.Select-menu-outer {
+    top: auto !important;
+    bottom: 100% !important;
+    margin-bottom: 8px !important;
+    background: rgba(30, 30, 50, 0.95) !important;
+    border: 1px solid #0ff !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 9999 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 -8px 32px rgba(0, 255, 255, 0.3);
+}
+
+.Select-menu {
+    z-index: 9999 !important;
+}
+
+/* OPTIONS */
+.Select-option {
+    color: #0ff !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    padding: 10px 15px !important;
+}
+
+.Select-option.is-focused {
+    background: rgba(0, 255, 255, 0.2) !important;
+}
+
+/* SPACING FIX */
+.glass-card.mb-5 {
+    margin-bottom: 4rem !important;
+}
+
+.mt-5 {
+    margin-top: 4rem !important;
+}
+
+/* Ensure clickable */
+.Select-control,
+.Select-menu-outer {
+    pointer-events: auto !important;
+}
+
+
+/* === CHART CARDS === */
+.dcc-graph {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 12px !important;
+    margin: 15px 0 !important;
+    transition: all 0.3s ease;
+}
+
+.dcc-graph:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
+}
+
+/* === HEADER GLOW === */
+.glow-title {
+    animation: glow 2s ease-in-out infinite alternate;
+    letter-spacing: 3px;
+    font-weight: bold;
+    font-size: 2.8rem;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #0ff; }
+    to { text-shadow: 0 0 20px #f0f, 0 0 30px #0ff; }
+}
+
+/* === STARFIELD === */
+.stars {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: -1; 
+    pointer-events: none;
+}
+
+.star {
+    position: absolute; 
+    width: 2px; 
+    height S: 2px; 
+    background: #fff;
+    border-radius: 50%; 
+    box-shadow: 0 0 6px #fff;
+    animation: float 8s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
+}
+
+/* === SMOOTH TRANSITIONS === */
+* {
+    transition: all 0.2s ease;
+}
+
+/* === FORCE DROPDOWN TO OPEN UPWARD + EXTRA SPACE === */
+.Select-menu-outer {
+    top: auto !important;
+    bottom: 100% !important;
+    margin-bottom: 8px !important;
+}
+
+/* Extra space below controls */
+.glass-card.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+/* Push first chart down */
+.mt-5 {
+    margin-top: 3rem !important;
+}</style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="launch-rocket">ROCKET</div>
+    <div class="container">
+        <div class="header" style="display:flex; justify-content:center; align-items:center; margin-bottom:30px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3212/3212657.png" style="height:60px; filter:brightness(0) invert(1); margin-right:15px;">
+            <h1 class="glow-title">LaunchBoard</h1>
+        </div>
+
+        <div class="glass-card" style="margin-bottom:4rem; padding:25px;">
+            <h5 class="text-info" style="margin-bottom:15px;">MISSION CONTROL</h5>
+            <div style="display:flex; gap:20px; align-items:end;">
+                <div style="flex:2;">
+                    <label class="text-info d-block mb-2">Time Warp</label>
+                    <input type="range" min="1957" max="2025" value="1957" id="year-min" style="width:48%;">
+                    <input type="range" min="1957" max="2025" value="2025" id="year-max" style="width:48%; margin-left:4%;">
+                    <div style="text-align:center; color:#aaa; margin-top:5px;">
+                        <span id="year-label">1957 — 2025</span>
+                    </div>
+                </div>
+                <div style="flex:1;">
+                    <label class="text-info d-block mb-2">Focus Target</label>
+                    <select id="country-filter" style="width:100%; padding:8px; background:#333; color:#0ff; border:1px solid #0ff; border-radius:8px;">
+                        <option value="All">All</option>
+                        <option value="US">US</option>
+                        <option value="Russia">Russia</option>
+                        <option value="China">China</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="stacked-area" style="margin:4rem 0;"></div>
+        <div style="display:flex; gap:20px; margin:4rem 0;">
+            <div id="dual-axis" style="flex:1;"></div>
+            <div id="small-multiples" style="flex:1;"></div>
+        </div>
+
+        <div class="text-center text-muted" style="margin:40px 0; font-size:14px;">
+            © 2025 [Your Name] | Data Science Mission
+        </div>
+    </div>
+
+    <script>
+        const fullData = [{"Year":1957,"Global Launches":3.0,"GlobalFailure":1.0,"GlobalSuccess":2.0,"GlobalFailRate":0.33,"Russia Total":2,"RUFail":0.0,"RUSuccess":2.0,"Russia Fail Rate":0.0,"US Total":1,"USFail":1.0,"USSuccess":0.0,"US Fail Rate":1.0,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1958,"Global Launches":27.0,"GlobalFailure":19.0,"GlobalSuccess":8.0,"GlobalFailRate":0.7,"Russia Total":5,"RUFail":4.0,"RUSuccess":1.0,"Russia Fail Rate":0.8,"US Total":22,"USFail":15.0,"USSuccess":7.0,"US Fail Rate":0.68,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1959,"Global Launches":22.0,"GlobalFailure":9.0,"GlobalSuccess":13.0,"GlobalFailRate":0.41,"Russia Total":4,"RUFail":1.0,"RUSuccess":3.0,"Russia Fail Rate":0.25,"US Total":18,"USFail":8.0,"USSuccess":10.0,"US Fail Rate":0.44,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1960,"Global Launches":37.0,"GlobalFailure":18.0,"GlobalSuccess":19.0,"GlobalFailRate":0.49,"Russia Total":8,"RUFail":5.0,"RUSuccess":3.0,"Russia Fail Rate":0.63,"US Total":29,"USFail":13.0,"USSuccess":16.0,"US Fail Rate":0.45,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1961,"Global Launches":50.0,"GlobalFailure":18.0,"GlobalSuccess":32.0,"GlobalFailRate":0.36,"Russia Total":9,"RUFail":4.0,"RUSuccess":5.0,"Russia Fail Rate":0.44,"US Total":41,"USFail":14.0,"USSuccess":27.0,"US Fail Rate":0.34,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1962,"Global Launches":81.0,"GlobalFailure":14.0,"GlobalSuccess":67.0,"GlobalFailRate":0.17,"Russia Total":22,"RUFail":7.0,"RUSuccess":15.0,"Russia Fail Rate":0.32,"US Total":59,"USFail":7.0,"USSuccess":52.0,"US Fail Rate":0.12,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1963,"Global Launches":69.0,"GlobalFailure":17.0,"GlobalSuccess":52.0,"GlobalFailRate":0.25,"Russia Total":23,"RUFail":8.0,"RUSuccess":15.0,"Russia Fail Rate":0.35,"US Total":46,"USFail":9.0,"USSuccess":37.0,"US Fail Rate":0.2,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1964,"Global Launches":99.0,"GlobalFailure":14.0,"GlobalSuccess":85.0,"GlobalFailRate":0.14,"Russia Total":36,"RUFail":7.0,"RUSuccess":29.0,"Russia Fail Rate":0.19,"US Total":63,"USFail":7.0,"USSuccess":56.0,"US Fail Rate":0.11,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1965,"Global Launches":124.0,"GlobalFailure":14.0,"GlobalSuccess":110.0,"GlobalFailRate":0.11,"Russia Total":53,"RUFail":7.0,"RUSuccess":46.0,"Russia Fail Rate":0.13,"US Total":70,"USFail":7.0,"USSuccess":63.0,"US Fail Rate":0.1,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1966,"Global Launches":131.0,"GlobalFailure":17.0,"GlobalSuccess":114.0,"GlobalFailRate":0.13,"Russia Total":51,"RUFail":9.0,"RUSuccess":42.0,"Russia Fail Rate":0.18,"US Total":77,"USFail":6.0,"USSuccess":71.0,"US Fail Rate":0.08,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1967,"Global Launches":139.0,"GlobalFailure":14.0,"GlobalSuccess":125.0,"GlobalFailRate":0.1,"Russia Total":74,"RUFail":10.0,"RUSuccess":64.0,"Russia Fail Rate":0.14,"US Total":61,"USFail":3.0,"USSuccess":58.0,"US Fail Rate":0.05,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1968,"Global Launches":128.0,"GlobalFailure":10.0,"GlobalSuccess":118.0,"GlobalFailRate":0.08,"Russia Total":79,"RUFail":5.0,"RUSuccess":74.0,"Russia Fail Rate":0.06,"US Total":48,"USFail":4.0,"USSuccess":44.0,"US Fail Rate":0.08,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1969,"Global Launches":124.0,"GlobalFailure":17.0,"GlobalSuccess":107.0,"GlobalFailRate":0.14,"Russia Total":81,"RUFail":13.0,"RUSuccess":68.0,"Russia Fail Rate":0.16,"US Total":41,"USFail":2.0,"USSuccess":39.0,"US Fail Rate":0.05,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1970,"Global Launches":122.0,"GlobalFailure":9.0,"GlobalSuccess":113.0,"GlobalFailRate":0.07,"Russia Total":87,"RUFail":7.0,"RUSuccess":80.0,"Russia Fail Rate":0.08,"US Total":28,"USFail":0.0,"USSuccess":28.0,"US Fail Rate":0.0,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1971,"Global Launches":133.0,"GlobalFailure":15.0,"GlobalSuccess":118.0,"GlobalFailRate":0.11,"Russia Total":91,"RUFail":9.0,"RUSuccess":82.0,"Russia Fail Rate":0.1,"US Total":33,"USFail":4.0,"USSuccess":29.0,"US Fail Rate":0.12,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1972,"Global Launches":113.0,"GlobalFailure":8.0,"GlobalSuccess":105.0,"GlobalFailRate":0.07,"Russia Total":79,"RUFail":6.0,"RUSuccess":73.0,"Russia Fail Rate":0.08,"US Total":32,"USFail":2.0,"USSuccess":30.0,"US Fail Rate":0.06,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1973,"Global Launches":114.0,"GlobalFailure":5.0,"GlobalSuccess":109.0,"GlobalFailRate":0.04,"Russia Total":88,"RUFail":2.0,"RUSuccess":86.0,"Russia Fail Rate":0.02,"US Total":25,"USFail":2.0,"USSuccess":23.0,"US Fail Rate":0.08,"China Total":1,"CNFail":1.0,"CNSuccess":0.0,"China Fail Rate":1.0},{"Year":1974,"Global Launches":113.0,"GlobalFailure":8.0,"GlobalSuccess":105.0,"GlobalFailRate":0.07,"Russia Total":85,"RUFail":4.0,"RUSuccess":81.0,"Russia Fail Rate":0.05,"US Total":23,"USFail":2.0,"USSuccess":21.0,"US Fail Rate":0.09,"China Total":2,"CNFail":2.0,"CNSuccess":0.0,"China Fail Rate":1.0},{"Year":1975,"Global Launches":132.0,"GlobalFailure":7.0,"GlobalSuccess":125.0,"GlobalFailRate":0.05,"Russia Total":93,"RUFail":4.0,"RUSuccess":89.0,"Russia Fail Rate":0.04,"US Total":30,"USFail":3.0,"USSuccess":27.0,"US Fail Rate":0.1,"China Total":3,"CNFail":0.0,"CNSuccess":3.0,"China Fail Rate":0.0},{"Year":1976,"Global Launches":131.0,"GlobalFailure":5.0,"GlobalSuccess":126.0,"GlobalFailRate":0.04,"Russia Total":100,"RUFail":3.0,"RUSuccess":97.0,"Russia Fail Rate":0.03,"US Total":26,"USFail":0.0,"USSuccess":26.0,"US Fail Rate":0.0,"China Total":3,"CNFail":1.0,"CNSuccess":2.0,"China Fail Rate":0.33},{"Year":1977,"Global Launches":130.0,"GlobalFailure":7.0,"GlobalSuccess":123.0,"GlobalFailRate":0.05,"Russia Total":102,"RUFail":4.0,"RUSuccess":98.0,"Russia Fail Rate":0.04,"US Total":26,"USFail":3.0,"USSuccess":23.0,"US Fail Rate":0.12,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1978,"Global Launches":128.0,"GlobalFailure":5.0,"GlobalSuccess":123.0,"GlobalFailRate":0.04,"Russia Total":91,"RUFail":4.0,"RUSuccess":87.0,"Russia Fail Rate":0.04,"US Total":33,"USFail":1.0,"USSuccess":32.0,"US Fail Rate":0.03,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1979,"Global Launches":109.0,"GlobalFailure":4.0,"GlobalSuccess":105.0,"GlobalFailRate":0.04,"Russia Total":88,"RUFail":1.0,"RUSuccess":87.0,"Russia Fail Rate":0.01,"US Total":16,"USFail":0.0,"USSuccess":16.0,"US Fail Rate":0.0,"China Total":1,"CNFail":1.0,"CNSuccess":0.0,"China Fail Rate":1.0},{"Year":1980,"Global Launches":107.0,"GlobalFailure":4.0,"GlobalSuccess":103.0,"GlobalFailRate":0.04,"Russia Total":89,"RUFail":2.0,"RUSuccess":87.0,"Russia Fail Rate":0.02,"US Total":14,"USFail":1.0,"USSuccess":13.0,"US Fail Rate":0.07,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1981,"Global Launches":126.0,"GlobalFailure":4.0,"GlobalSuccess":122.0,"GlobalFailRate":0.03,"Russia Total":100,"RUFail":2.0,"RUSuccess":98.0,"Russia Fail Rate":0.02,"US Total":19,"USFail":2.0,"USSuccess":17.0,"US Fail Rate":0.11,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1982,"Global Launches":129.0,"GlobalFailure":10.0,"GlobalSuccess":119.0,"GlobalFailRate":0.08,"Russia Total":108,"RUFail":9.0,"RUSuccess":99.0,"Russia Fail Rate":0.08,"US Total":18,"USFail":0.0,"USSuccess":18.0,"US Fail Rate":0.0,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1983,"Global Launches":129.0,"GlobalFailure":2.0,"GlobalSuccess":127.0,"GlobalFailRate":0.02,"Russia Total":100,"RUFail":2.0,"RUSuccess":98.0,"Russia Fail Rate":0.02,"US Total":22,"USFail":0.0,"USSuccess":22.0,"US Fail Rate":0.0,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1984,"Global Launches":129.0,"GlobalFailure":3.0,"GlobalSuccess":126.0,"GlobalFailRate":0.02,"Russia Total":97,"RUFail":1.0,"RUSuccess":96.0,"Russia Fail Rate":0.01,"US Total":22,"USFail":1.0,"USSuccess":21.0,"US Fail Rate":0.05,"China Total":3,"CNFail":1.0,"CNSuccess":2.0,"China Fail Rate":0.33},{"Year":1985,"Global Launches":125.0,"GlobalFailure":5.0,"GlobalSuccess":120.0,"GlobalFailRate":0.04,"Russia Total":100,"RUFail":3.0,"RUSuccess":97.0,"Russia Fail Rate":0.03,"US Total":18,"USFail":1.0,"USSuccess":17.0,"US Fail Rate":0.06,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1986,"Global Launches":110.0,"GlobalFailure":8.0,"GlobalSuccess":102.0,"GlobalFailRate":0.07,"Russia Total":94,"RUFail":4.0,"RUSuccess":90.0,"Russia Fail Rate":0.04,"US Total":9,"USFail":3.0,"USSuccess":6.0,"US Fail Rate":0.33,"China Total":2,"CNFail":0.0,"CNSuccess":2.0,"China Fail Rate":0.0},{"Year":1987,"Global Launches":113.0,"GlobalFailure":5.0,"GlobalSuccess":108.0,"GlobalFailRate":0.04,"Russia Total":96,"RUFail":3.0,"RUSuccess":93.0,"Russia Fail Rate":0.03,"US Total":9,"USFail":1.0,"USSuccess":8.0,"US Fail Rate":0.11,"China Total":2,"CNFail":0.0,"CNSuccess":2.0,"China Fail Rate":0.0},{"Year":1988,"Global Launches":121.0,"GlobalFailure":6.0,"GlobalSuccess":115.0,"GlobalFailRate":0.05,"Russia Total":94,"RUFail":5.0,"RUSuccess":89.0,"Russia Fail Rate":0.05,"US Total":11,"USFail":0.0,"USSuccess":11.0,"US Fail Rate":0.0,"China Total":4,"CNFail":0.0,"CNSuccess":4.0,"China Fail Rate":0.0},{"Year":1989,"Global Launches":102.0,"GlobalFailure":1.0,"GlobalSuccess":101.0,"GlobalFailRate":0.01,"Russia Total":75,"RUFail":1.0,"RUSuccess":74.0,"Russia Fail Rate":0.01,"US Total":18,"USFail":0.0,"USSuccess":18.0,"US Fail Rate":0.0,"China Total":0,"CNFail":0.0,"CNSuccess":0.0,"China Fail Rate":0.0},{"Year":1990,"Global Launches":121.0,"GlobalFailure":7.0,"GlobalSuccess":114.0,"GlobalFailRate":0.06,"Russia Total":79,"RUFail":5.0,"RUSuccess":74.0,"Russia Fail Rate":0.06,"US Total":27,"USFail":1.0,"USSuccess":26.0,"US Fail Rate":0.04,"China Total":5,"CNFail":0.0,"CNSuccess":5.0,"China Fail Rate":0.0},{"Year":1991,"Global Launches":91.0,"GlobalFailure":5.0,"GlobalSuccess":86.0,"GlobalFailRate":0.05,"Russia Total":61,"RUFail":2.0,"RUSuccess":59.0,"Russia Fail Rate":0.03,"US Total":19,"USFail":2.0,"USSuccess":17.0,"US Fail Rate":0.11,"China Total":1,"CNFail":1.0,"CNSuccess":0.0,"China Fail Rate":1.0},{"Year":1992,"Global Launches":97.0,"GlobalFailure":3.0,"GlobalSuccess":94.0,"GlobalFailRate":0.03,"Russia Total":55,"RUFail":1.0,"RUSuccess":54.0,"Russia Fail Rate":0.02,"US Total":29,"USFail":1.0,"USSuccess":28.0,"US Fail Rate":0.03,"China Total":4,"CNFail":1.0,"CNSuccess":3.0,"China Fail Rate":0.25},{"Year":1993,"Global Launches":83.0,"GlobalFailure":6.0,"GlobalSuccess":77.0,"GlobalFailRate":0.07,"Russia Total":48,"RUFail":2.0,"RUSuccess":46.0,"Russia Fail Rate":0.04,"US Total":25,"USFail":3.0,"USSuccess":22.0,"US Fail Rate":0.12,"China Total":1,"CNFail":0.0,"CNSuccess":1.0,"China Fail Rate":0.0},{"Year":1994,"Global Launches":93.0,"GlobalFailure":4.0,"GlobalSuccess":89.0,"GlobalFailRate":0.04,"Russia Total":49,"RUFail":1.0,"RUSuccess":48.0,"Russia Fail Rate":0.02,"US Total":27,"USFail":1.0,"USSuccess":26.0,"US Fail Rate":0.04,"China Total":5,"CNFail":0.0,"CNSuccess":5.0,"China Fail Rate":0.0},{"Year":1995,"Global Launches":79.0,"GlobalFailure":6.0,"GlobalSuccess":73.0,"GlobalFailRate":0.08,"Russia Total":33,"RUFail":2.0,"RUSuccess":31.0,"Russia Fail Rate":0.06,"US Total":30,"USFail":3.0,"USSuccess":27.0,"US Fail Rate":0.1,"China Total":3,"CNFail":1.0,"CNSuccess":2.0,"China Fail Rate":0.33},{"Year":1996,"Global Launches":77.0,"GlobalFailure":6.0,"GlobalSuccess":71.0,"GlobalFailRate":0.08,"Russia Total":27,"RUFail":2.0,"RUSuccess":25.0,"Russia Fail Rate":0.07,"US Total":33,"USFail":1.0,"USSuccess":32.0,"US Fail Rate":0.03,"China Total":4,"CNFail":2.0,"CNSuccess":2.0,"China Fail Rate":0.5},{"Year":1997,"Global Launches":89.0,"GlobalFailure":4.0,"GlobalSuccess":85.0,"GlobalFailRate":0.04,"Russia Total":29,"RUFail":2.0,"RUSuccess":27.0,"Russia Fail Rate":0.07,"US Total":38,"USFail":1.0,"USSuccess":37.0,"US Fail Rate":0.03,"China Total":6,"CNFail":0.0,"CNSuccess":6.0,"China Fail Rate":0.0},{"Year":1998,"Global Launches":82.0,"GlobalFailure":6.0,"GlobalSuccess":76.0,"GlobalFailRate":0.07,"Russia Total":25,"RUFail":1.0,"RUSuccess":24.0,"Russia Fail Rate":0.04,"US Total":36,"USFail":2.0,"USSuccess":34.0,"US Fail Rate":0.06,"China Total":6,"CNFail":0.0,"CNSuccess":6.0,"China Fail Rate":0.0},{"Year":1999,"Global Launches":78.0,"GlobalFailure":8.0,"GlobalSuccess":70.0,"GlobalFailRate":0.1,"Russia Total":22,"RUFail":2.0,"RUSuccess":20.0,"Russia Fail Rate":0.09,"US Total":31,"USFail":4.0,"USSuccess":27.0,"US Fail Rate":0.13,"China Total":4,"CNFail":0.0,"CNSuccess":4.0,"China Fail Rate":0.0},{"Year":2000,"Global Launches":84.0,"GlobalFailure":3.0,"GlobalSuccess":81.0,"GlobalFailRate":0.04,"Russia Total":32,"RUFail":2.0,"RUSuccess":30.0,"Russia Fail Rate":0.06,"US Total":29,"USFail":0.0,"USSuccess":29.0,"US Fail Rate":0.0,"China Total":5,"CNFail":0.0,"CNSuccess":5.0,"China Fail Rate":0.0},{"Year":2001,"Global Launches":58.0,"GlobalFailure":1.0,"GlobalSuccess":57.0,"GlobalFailRate":0.02,"Russia Total":25,"RUFail":2.0,"RUSuccess":23.0,"Russia Fail Rate":0.08,"US Total":23,"USFail":0.0,"USSuccess":23.0,"US Fail Rate":0.0,"China Total":2,"CNFail":1.0,"CNSuccess":1.0,"China Fail Rate":0.5},{"Year":2002,"Global Launches":65.0,"GlobalFailure":4.0,"GlobalSuccess":61.0,"GlobalFailRate":0.06,"Russia Total":24,"RUFail":1.0,"RUSuccess":23.0,"Russia Fail Rate":0.04,"US Total":19,"USFail":1.0,"USSuccess":18.0,"US Fail Rate":0.05,"China Total":4,"CNFail":0.0,"CNSuccess":4.0,"China Fail Rate":0.0},{"Year":2003,"Global Launches":62.0,"GlobalFailure":1.0,"GlobalSuccess":61.0,"GlobalFailRate":0.02,"Russia Total":22,"RUFail":3.0,"RUSuccess":19.0,"Russia Fail Rate":0.14,"US Total":26,"USFail":0.0,"USSuccess":26.0,"US Fail Rate":0.0,"China Total":7,"CNFail":1.0,"CNSuccess":6.0,"China Fail Rate":0.14},{"Year":2004,"Global Launches":54.0,"GlobalFailure":3.0,"GlobalSuccess":51.0,"GlobalFailRate":0.06,"Russia Total":23,"RUFail":2.0,"RUSuccess":21.0,"Russia Fail Rate":0.09,"US Total":19,"USFail":1.0,"USSuccess":18.0,"US Fail Rate":0.05,"China Total":8,"CNFail":0.0,"CNSuccess":8.0,"China Fail Rate":0.0},{"Year":2005,"Global Launches":56.0,"GlobalFailure":4.0,"GlobalSuccess":52.0,"GlobalFailRate":0.07,"Russia Total":21,"RUFail":1.0,"RUSuccess":20.0,"Russia Fail Rate":0.05,"US Total":18,"USFail":2.0,"USSuccess":16.0,"US Fail Rate":0.11,"China Total":5,"CNFail":0.0,"CNSuccess":5.0,"China Fail Rate":0.0},{"Year":2006,"Global Launches":66.0,"GlobalFailure":4.0,"GlobalSuccess":62.0,"GlobalFailRate":0.06,"Russia Total":22,"RUFail":1.0,"RUSuccess":21.0,"Russia Fail Rate":0.05,"US Total":23,"USFail":1.0,"USSuccess":22.0,"US Fail Rate":0.04,"China Total":6,"CNFail":0.0,"CNSuccess":6.0,"China Fail Rate":0.0},{"Year":2007,"Global Launches":68.0,"GlobalFailure":3.0,"GlobalSuccess":65.0,"GlobalFailRate":0.04,"Russia Total":22,"RUFail":0.0,"RUSuccess":22.0,"Russia Fail Rate":0.0,"US Total":19,"USFail":1.0,"USSuccess":18.0,"US Fail Rate":0.05,"China Total":11,"CNFail":1.0,"CNSuccess":10.0,"China Fail Rate":0.09},{"Year":2008,"Global Launches":69.0,"GlobalFailure":3.0,"GlobalSuccess":66.0,"GlobalFailRate":0.04,"Russia Total":26,"RUFail":1.0,"RUSuccess":25.0,"Russia Fail Rate":0.04,"US Total":19,"USFail":0.0,"USSuccess":19.0,"US Fail Rate":0.0,"China Total":11,"CNFail":0.0,"CNSuccess":11.0,"China Fail Rate":0.0},{"Year":2009,"Global Launches":78.0,"GlobalFailure":4.0,"GlobalSuccess":74.0,"GlobalFailRate":0.05,"Russia Total":36,"RUFail":4.0,"RUSuccess":32.0,"Russia Fail Rate":0.11,"US Total":25,"USFail":1.0,"USSuccess":24.0,"US Fail Rate":0.04,"China Total":6,"CNFail":1.0,"CNSuccess":5.0,"China Fail Rate":0.17},{"Year":2010,"Global Launches":74.0,"GlobalFailure":4.0,"GlobalSuccess":70.0,"GlobalFailRate":0.05,"Russia Total":31,"RUFail":2.0,"RUSuccess":29.0,"Russia Fail Rate":0.06,"US Total":15,"USFail":0.0,"USSuccess":15.0,"US Fail Rate":0.0,"China Total":15,"CNFail":0.0,"CNSuccess":15.0,"China Fail Rate":0.0},{"Year":2011,"Global Launches":84.0,"GlobalFailure":6.0,"GlobalSuccess":78.0,"GlobalFailRate":0.07,"Russia Total":27,"RUFail":1.0,"RUSuccess":26.0,"Russia Fail Rate":0.04,"US Total":19,"USFail":1.0,"USSuccess":18.0,"US Fail Rate":0.05,"China Total":19,"CNFail":1.0,"CNSuccess":18.0,"China Fail Rate":0.05},{"Year":2012,"Global Launches":78.0,"GlobalFailure":5.0,"GlobalSuccess":73.0,"GlobalFailRate":0.06,"Russia Total":22,"RUFail":1.0,"RUSuccess":21.0,"Russia Fail Rate":0.05,"US Total":17,"USFail":1.0,"USSuccess":16.0,"US Fail Rate":0.06,"China Total":19,"CNFail":0.0,"CNSuccess":19.0,"China Fail Rate":0.0},{"Year":2013,"Global Launches":81.0,"GlobalFailure":3.0,"GlobalSuccess":78.0,"GlobalFailRate":0.04,"Russia Total":33,"RUFail":3.0,"RUSuccess":30.0,"Russia Fail Rate":0.09,"US Total":21,"USFail":2.0,"USSuccess":19.0,"US Fail Rate":0.1,"China Total":14,"CNFail":0.0,"CNSuccess":14.0,"China Fail Rate":0.0},{"Year":2014,"Global Launches":92.0,"GlobalFailure":3.0,"GlobalSuccess":89.0,"GlobalFailRate":0.03,"Russia Total":32,"RUFail":1.0,"RUSuccess":31.0,"Russia Fail Rate":0.03,"US Total":23,"USFail":0.0,"USSuccess":23.0,"US Fail Rate":0.0,"China Total":17,"CNFail":1.0,"CNSuccess":16.0,"China Fail Rate":0.06},{"Year":2015,"Global Launches":86.0,"GlobalFailure":5.0,"GlobalSuccess":81.0,"GlobalFailRate":0.06,"Russia Total":24,"RUFail":1.0,"RUSuccess":23.0,"Russia Fail Rate":0.04,"US Total":18,"USFail":0.0,"USSuccess":18.0,"US Fail Rate":0.0,"China Total":21,"CNFail":2.0,"CNSuccess":19.0,"China Fail Rate":0.1},{"Year":2016,"Global Launches":85.0,"GlobalFailure":2.0,"GlobalSuccess":83.0,"GlobalFailRate":0.02,"Russia Total":17,"RUFail":1.0,"RUSuccess":16.0,"Russia Fail Rate":0.06,"US Total":22,"USFail":0.0,"USSuccess":22.0,"US Fail Rate":0.0,"China Total":22,"CNFail":1.0,"CNSuccess":21.0,"China Fail Rate":0.05},{"Year":2017,"Global Launches":90.0,"GlobalFailure":6.0,"GlobalSuccess":84.0,"GlobalFailRate":0.07,"Russia Total":18,"RUFail":0.0,"RUSuccess":18.0,"Russia Fail Rate":0.0,"US Total":29,"USFail":0.0,"USSuccess":29.0,"US Fail Rate":0.0,"China Total":18,"CNFail":2.0,"CNSuccess":16.0,"China Fail Rate":0.11},{"Year":2018,"Global Launches":114.0,"GlobalFailure":2.0,"GlobalSuccess":112.0,"GlobalFailRate":0.02,"Russia Total":16,"RUFail":0.0,"RUSuccess":16.0,"Russia Fail Rate":0.0,"US Total":34,"USFail":3.0,"USSuccess":31.0,"US Fail Rate":0.09,"China Total":42,"CNFail":4.0,"CNSuccess":38.0,"China Fail Rate":0.1},{"Year":2019,"Global Launches":102.0,"GlobalFailure":5.0,"GlobalSuccess":97.0,"GlobalFailRate":0.05,"Russia Total":23,"RUFail":1.0,"RUSuccess":22.0,"Russia Fail Rate":0.04,"US Total":23,"USFail":2.0,"USSuccess":21.0,"US Fail Rate":0.09,"China Total":35,"CNFail":3.0,"CNSuccess":32.0,"China Fail Rate":0.09},{"Year":2020,"Global Launches":113.0,"GlobalFailure":9.0,"GlobalSuccess":104.0,"GlobalFailRate":0.08,"Russia Total":12,"RUFail":0.0,"RUSuccess":12.0,"Russia Fail Rate":0.0,"US Total":36,"USFail":2.0,"USSuccess":34.0,"US Fail Rate":0.06,"China Total":37,"CNFail":2.0,"CNSuccess":35.0,"China Fail Rate":0.05},{"Year":2021,"Global Launches":145.0,"GlobalFailure":11.0,"GlobalSuccess":134.0,"GlobalFailRate":0.08,"Russia Total":15,"RUFail":0.0,"RUSuccess":15.0,"Russia Fail Rate":0.0,"US Total":49,"USFail":6.0,"USSuccess":43.0,"US Fail Rate":0.12,"China Total":53,"CNFail":1.0,"CNSuccess":52.0,"China Fail Rate":0.02},{"Year":2022,"Global Launches":185.0,"GlobalFailure":6.0,"GlobalSuccess":179.0,"GlobalFailRate":0.03,"Russia Total":21,"RUFail":0.0,"RUSuccess":21.0,"Russia Fail Rate":0.0,"US Total":77,"USFail":1.0,"USSuccess":76.0,"US Fail Rate":0.01,"China Total":64,"CNFail":2.0,"CNSuccess":62.0,"China Fail Rate":0.03},{"Year":2023,"Global Launches":223.0,"GlobalFailure":12.0,"GlobalSuccess":211.0,"GlobalFailRate":0.05,"Russia Total":19,"RUFail":0.0,"RUSuccess":19.0,"Russia Fail Rate":0.0,"US Total":105,"USFail":2.0,"USSuccess":103.0,"US Fail Rate":0.02,"China Total":68,"CNFail":2.0,"CNSuccess":66.0,"China Fail Rate":0.03},{"Year":2024,"Global Launches":259.0,"GlobalFailure":6.0,"GlobalSuccess":253.0,"GlobalFailRate":0.02,"Russia Total":17,"RUFail":0.0,"RUSuccess":17.0,"Russia Fail Rate":0.0,"US Total":140,"USFail":0.0,"USSuccess":140.0,"US Fail Rate":0.0,"China Total":66,"CNFail":0.0,"CNSuccess":66.0,"China Fail Rate":0.0},{"Year":2025,"Global Launches":248.0,"GlobalFailure":8.0,"GlobalSuccess":240.0,"GlobalFailRate":0.03,"Russia Total":13,"RUFail":0.0,"RUSuccess":13.0,"Russia Fail Rate":0.0,"US Total":141,"USFail":0.0,"USSuccess":141.0,"US Fail Rate":0.0,"China Total":64,"CNFail":0.0,"CNSuccess":64.0,"China Fail Rate":0.0}];
+        let currentData = fullData;
+        let currentCountry = 'All';
+
+        renderCharts();
+
+        const minSlider = document.getElementById('year-min');
+        const maxSlider = document.getElementById('year-max');
+        const label = document.getElementById('year-label');
+
+        function updateSlider() {
+            let start = parseInt(minSlider.value, 10);
+            let end = parseInt(maxSlider.value, 10);
+            if (start > end) { minSlider.value = end; start = end; }
+            if (end < start) { maxSlider.value = start; end = start; }
+            label.textContent = start + " — " + end;
+
+            currentData = fullData.filter(d => {
+                const year = Number(d.Year);
+                return year >= start && year <= end;
+            });
+
+            if (currentData.length === 0) currentData = fullData;
+            renderCharts();
+        }
+
+        minSlider.addEventListener('input', updateSlider);
+        maxSlider.addEventListener('input', updateSlider);
+
+        document.getElementById('country-filter').addEventListener('change', function() {
+            currentCountry = this.value;
+            renderCharts();
+        });
+
+        function renderCharts() {
+            if (!currentData.length) return;
+
+            // === STACKED AREA ===
+            const colorMap = { 'US Total': '#1f77b4', 'Russia Total': '#ff7f0e', 'China Total': '#2ca02c' };
+            let areaY = ['US Total', 'Russia Total', 'China Total'];
+            if (currentCountry !== 'All') areaY = [currentCountry + ' Total'];
+
+            const areaTraces = areaY.map(col => ({
+                x: currentData.map(d => d.Year),
+                y: currentData.map(d => d[col] || 0),
+                type: 'scatter',
+                mode: 'lines',
+                fill: 'tonexty',
+                name: col.split(' ')[0],
+                line: { width: 1 },
+                fillcolor: colorMap[col],
+                stackgroup: 'one'
+            }));
+
+            Plotly.react('stacked-area', areaTraces, {
+                title: 'Launch Share by Country',
+                template: 'plotly_dark',
+                height: 500,
+                hovermode: 'x unified',
+                margin: { t: 60, b: 50, l: 50, r: 50 }
+            });
+
+            // === DUAL AXIS ===
+            Plotly.react('dual-axis', [
+                { x: currentData.map(d => d.Year), y: currentData.map(d => d['Global Launches']), type: 'bar', name: 'Launches', marker: { color: 'lightgray' } },
+                { x: currentData.map(d => d.Year), y: currentData.map(d => d.GlobalFailRate), type: 'scatter', mode: 'lines', name: 'Fail Rate', yaxis: 'y2', line: { color: 'red', width: 3 } }
+            ], {
+                title: 'Global Volume vs. Failure Rate',
+                template: 'plotly_dark',
+                height: 500,
+                yaxis2: { overlaying: 'y', side: 'right', tickformat: '.0%' },
+                margin: { t: 60, b: 50, l: 50, r: 50 }
+            });
+
+            // === SMALL MULTIPLES ===
+            const countries = ['US', 'Russia', 'China'];
+            const showCountries = currentCountry === 'All' ? countries : [currentCountry];
+            const traces = [];
+            const layout = {
+                template: 'plotly_dark',
+                height: 300 * showCountries.length,
+                showlegend: false,
+                hovermode: 'x unified',
+                margin: { t: 100, b: 60, l: 80, r: 60 },
+                grid: { rows: showCountries.length, columns: 1, pattern: 'independent' }
+            };
+
+            showCountries.forEach((c, i) => {
+                const row = i + 1;
+                const years = currentData.map(d => d.Year);
+                const rates = currentData.map(d => d[c + ' Fail Rate']);
+                const labelIdx = [];
+                for (let j = 0; j < years.length; j += 5) labelIdx.push(j);
+                if (years.length) labelIdx.push(years.length - 1);
+                const uniqueIdx = [...new Set(labelIdx)];
+                const labels = rates.map((r, idx) => uniqueIdx.includes(idx) ? (r*100).toFixed(1) + '%' : '');
+
+                traces.push({
+                    x: years, y: rates,
+                    type: 'scatter', mode: 'lines+text',
+                    name: c, line: { color: '#0ff', width: 3 },
+                    text: labels, textposition: 'top center',
+                    textfont: { family: 'Orbitron', size: 11, color: '#0ff' },
+                    xaxis: 'x', yaxis: 'y' + row,
+                    hovertemplate: '<b>%{x}</b><br>Failure Rate: <b>%{y:.1%}</b><extra></extra>'
+                });
+
+                const ykey = i === 0 ? 'yaxis' : 'yaxis' + row;
+                layout[ykey] = {
+                    title: i === 0 ? 'Fail Rate' : '',
+                    tickformat: '.0%',
+                    range: [0, 1.25],
+                    showgrid: true,
+                    gridcolor: 'rgba(255,255,255,0.08)',
+                    tickfont: { family: 'Orbitron', color: '#0ff' }
+                };
+
+                layout.annotations = layout.annotations || [];
+                layout.annotations.push({
+                    xref: 'paper', yref: 'paper',
+                    x: 0.5, y: 1 - (row - 0.5) / showCountries.length,
+                    xanchor: 'center', yanchor: 'middle',
+                    text: `<b>${c} Failure Rate</b>`,
+                    font: { size: 16, color: '#0ff', family: 'Orbitron' },
+                    showarrow: false
+                });
+            });
+
+            layout.xaxis = {
+                title: 'Year',
+                showgrid: true,
+                gridcolor: 'rgba(255,255,255,0.08)',
+                tickfont: { family: 'Orbitron', color: '#0ff' }
+            };
+
+            Plotly.react('small-multiples', traces, layout);
+        }
+
+        // === ROCKET LAUNCH ON LOAD ===
+document.addEventListener("DOMContentLoaded", () => {
+    const rocket = document.createElement("div");
+    rocket.innerHTML = "ROCKET";
+    rocket.style.cssText = `
+        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+        font-size: 28px; font-weight: bold; color: #fff; z-index: 9999;
+        animation: launch 2s ease-out forwards; pointer-events: none;
+    `;
+    document.body.appendChild(rocket);
+    setTimeout(() => rocket.remove(), 2000);
+});
+
+// === STARFIELD v2 — GUARANTEED VISIBLE ===
+function spawnStars() {
+    const container = document.getElementById('stars');
+    if (!container) {
+        console.error('Stars container not found!');
+        return;
+    }
+
+    // Clear any old stars
+    container.innerHTML = '';
+
+    const count = 200;
+    for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+
+        // Random X
+        star.style.left = Math.random() * 100 + 'vw';
+
+        // Start off-screen below
+        star.style.top = '100vh';
+
+        // Random size
+        const size = Math.random() * 2.5 + 0.5;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+
+        // Random speed
+        const duration = Math.random() * 8 + 6;
+        star.style.animationDuration = duration + 's';
+
+        // Random delay
+        star.style.animationDelay = Math.random() * 5 + 's';
+
+        container.appendChild(star);
+    }
+}
+
+// Run IMMEDIATELY + on load
+spawnStars();
+window.addEventListener('load', () => {
+    setTimeout(spawnStars, 100); // Double spawn for safety
+});
+    </script>
+</body>
+</html>
